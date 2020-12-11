@@ -1,0 +1,188 @@
+# 2020/12/11(五), 109學年第一學期 資料科學應用 R期中考
+
+學號:A107260007       姓名:蕭亞青
+
+# (請依照規定)貼上執行程式碼及執行結果。
+詳見: R程式作業繳交方式
+http://www.hmwu.idv.tw/web/teaching/doc/R-how-homework.pdf
+
+> # ex1(a)
+
+> # 2020/12/11(五), 109學年第一學期 資料科學應用 R期中考
+> #
+> # 學號:A107260007      姓名:蕭亞青
+> #
+> # 本檔案為各題之程式碼檔，無執行結果
+> 
+> 
+> # ex1(a)
+> study <- function(x, y){
++   
++   Tuition <- 600*x + 400*y  
++   U <- sqrt(x)*sqrt(y)
++   ifelse(Tuition <= 12000,"*", " ")
++   cat(Tuition, U)
++ }
+> a <- for(i in 13:17){
++               for(j in 8:12){
++     cat(study(i, j), "\n")
++   }
++ }
+11000 10.19804 
+11400 10.81665 
+11800 11.40175 
+12200 11.95826 
+12600 12.49 
+11600 10.58301 
+12000 11.22497 
+12400 11.83216 
+12800 12.40967 
+13200 12.96148 
+12200 10.95445 
+12600 11.61895 
+13000 12.24745 
+13400 12.84523 
+13800 13.41641 
+12800 11.31371 
+13200 12 
+13600 12.64911 
+14000 13.2665 
+14400 13.85641 
+13400 11.6619 
+13800 12.36932 
+14200 13.0384 
+14600 13.67479 
+15000 14.28286 
+> x <- 13:17
+> y <- 8:12
+> data.frame(x, y, a)
+Error in data.frame(x, y, a) : 
+  arguments imply differing number of rows: 5, 0
+> 
+> #ex2(a)
+> library(readxl)
+> data <- read_excel("data/Score-109.xlsx", na="NA")
+New names:
+* `` -> ...2
+* `` -> ...3
+> head(data, 6, skip=2)
+# A tibble: 6 x 3
+  `109-1 Department of Mathematics` ...2     ...3   
+  <chr>                             <chr>    <chr>  
+1 ID                                Calculus English
+2 No.1                              72       62     
+3 No.2                              88       97     
+4 No.3                              76       66     
+5 No.4                              89       51     
+6 No.5                              46       15     
+> tail(data, 5)
+# A tibble: 5 x 3
+  `109-1 Department of Mathematics` ...2  ...3 
+  <chr>                             <chr> <chr>
+1 No.71                             69    96   
+2 No.72                             51    100  
+3 No.73                             37    50   
+4 No.74                             33    92   
+5 No.75                             4     37   
+> 
+> #ex2(b)
+> str(data)
+tibble [76 x 3] (S3: tbl_df/tbl/data.frame)
+ $ 109-1 Department of Mathematics: chr [1:76] "ID" "No.1" "No.2" "No.3" ...
+ $ ...2                           : chr [1:76] "Calculus" "72" "88" "76" ...
+ $ ...3                           : chr [1:76] "English" "62" "97" "66" ...
+> colnames(data) <- c("ID", "Calculus", "English")
+> data[is.na(data)] <- 0
+錯誤: Assigned data `0` must be compatible with existing data.
+i Error occurred for column `Calculus`.
+x Can't convert <double> to <character>.
+Run `rlang::last_error()` to see where the error occurred.
+> id <- which(data$Calculus < 60 & data$English < 60)
+> data[id,]
+# A tibble: 19 x 3
+   ID    Calculus English
+   <chr> <chr>    <chr>  
+ 1 No.5  46       15     
+ 2 No.7  32       51     
+ 3 No.8  51       0      
+ 4 No.15 39       6      
+ 5 No.21 45       51     
+ 6 No.26 39       29     
+ 7 No.30 48       52     
+ 8 No.35 37       21     
+ 9 No.45 26       32     
+10 No.46 32       56     
+11 No.47 6        52     
+12 No.53 31       18     
+13 No.54 21       28     
+14 No.56 50       3      
+15 No.66 22       52     
+16 No.68 15       21     
+17 No.72 51       100    
+18 No.73 37       50     
+19 No.75 4        37     
+> 
+> #ex2(c)
+> my.cor <- function(x, y){
++   
++   x.bar <- mean(x)
++   y.bar <- mean(y)
++   a <- x-x.bar
++   b <- y-y.bar
++   c <- sqrt(sum((x-x.bar)^2))
++   d <- sqrt(sum((y-y.bar)^2))
++   r <- sum(a*b) / c*d
++   r
++ }
+> data$Calculus <- as.numeric(data$Calculus)
+Warning message:
+強制變更過程中產生了 NA 
+> data$English <- as.numeric(data$English)
+Warning message:
+強制變更過程中產生了 NA 
+> data[is.na(data)] <- 0
+> my.cor(data$Calculus, data$English)
+[1] 811.4773
+> 
+> #ex2(d)
+> cor(data$Calculus, data$English)
+[1] 0.01055664
+> 
+> #ex3(a)
+> my.dnorm <- function(x, μ=0, σ=1){
++   
++   a <- (x-μ)^2 / 2*(σ^2)
++   exp(-a)
++   b <- sqrt(2*pi)*σ
++   d <- exp(-a)/b
++   d
++ }
+> my.dnorm(2.5, 3, 2)
+[1] 0.1209854
+> 
+> #ex3(b)
+> x <- -3:3
+> dnorm <- for(i in -3:3){
++   cat(dnorm(i), "\n")
++ }
+0.004431848 
+0.05399097 
+0.2419707 
+0.3989423 
+0.2419707 
+0.05399097 
+0.004431848 
+> my.dnorm <- for(i in -3:3){
++   cat(my.dnorm(i), "\n")
++ }
+0.004431848 
+0.05399097 
+0.2419707 
+0.3989423 
+0.2419707 
+0.05399097 
+0.004431848 
+> data.frame(x, my.dnorm, dnorm)
+Error in data.frame(x, my.dnorm, dnorm) : 
+  arguments imply differing number of rows: 7, 0
+> 
